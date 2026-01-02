@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interval_insights_app/common/utils/app_theme.dart';
+import 'package:interval_insights_app/common/widgets/pending_review/pending_review_action_button.dart';
 
-enum NavbarItem { dashboard, activities, agent }
+enum NavbarItem { dashboard, activities, agent, profile }
 
 class ScaffoldWithNavbarBottomSheet extends StatelessWidget {
   const ScaffoldWithNavbarBottomSheet(
@@ -18,7 +20,11 @@ class ScaffoldWithNavbarBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
+      resizeToAvoidBottomInset: true,
+      // TODO: fix me
+      appBar: AppBar(toolbarHeight: 0),
       body: navigationShell,
+      floatingActionButton: const PendingReviewActionButton(),
       bottomNavigationBar: showNavBar
           ? BottomNavigation(navigationShell: navigationShell)
           : null,
@@ -54,27 +60,56 @@ class BottomNavigation extends StatelessWidget {
       child: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
         labelPadding: EdgeInsets.zero,
+        indicatorColor: AppColors.accent,
+        backgroundColor: AppColors.primary,
         labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((
           Set<WidgetState> states,
         ) {
           final isSelected = states.contains(WidgetState.selected);
-          final textStyle = isSelected
-              ? const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)
-              : const TextStyle(fontSize: 14);
-          return textStyle;
+          return isSelected
+              ? Theme.of(
+                  context,
+                ).textTheme.labelLarge!.copyWith(color: AppColors.textOnDark)
+              : Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: AppColors.textSecondary,
+                );
         }),
         destinations: [
           NavigationDestination(
-            icon: const Icon(Icons.home),
+            icon: const Icon(
+              size: 35,
+              Icons.home_outlined,
+              color: AppColors.textSecondary,
+            ),
             label: NavbarItem.dashboard.name,
+            selectedIcon: const Icon(size: 35, Icons.home),
           ),
           NavigationDestination(
-            icon: const Icon(Icons.run_circle_outlined),
+            icon: const Icon(
+              size: 35,
+              Icons.run_circle_outlined,
+              color: AppColors.textSecondary,
+            ),
+            selectedIcon: const Icon(size: 35, Icons.run_circle),
             label: NavbarItem.activities.name,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.support_agent_rounded),
+            icon: const Icon(
+              size: 35,
+              Icons.support_agent_outlined,
+              color: AppColors.textSecondary,
+            ),
+            selectedIcon: const Icon(size: 35, Icons.support_agent_rounded),
             label: NavbarItem.agent.name,
+          ),
+          NavigationDestination(
+            icon: const Icon(
+              size: 35,
+              Icons.person_outline,
+              color: AppColors.textSecondary,
+            ),
+            selectedIcon: const Icon(size: 35, Icons.person),
+            label: NavbarItem.profile.name,
           ),
         ],
         onDestinationSelected: _onTap,

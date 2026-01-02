@@ -1,36 +1,29 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:interval_insights_app/common/controllers/auth_controller.dart';
 import 'package:interval_insights_app/common/utils/app_theme.dart';
-import 'package:interval_insights_app/common/widgets/app_button.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
+    return const Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const _DashboardHeader(),
-              AppButton(
-                label: "logout",
-                onPressed: () =>
-                    ref.read(authControllerProvider.notifier).signOut(),
-              ),
-              const SizedBox(height: 24),
-              const _WeeklyComparisonCard(),
-              const SizedBox(height: 24),
-              const _TrainingLoadCard(),
-              const SizedBox(height: 24),
-              const _RecentActivityCard(),
-              const SizedBox(height: 24),
-              const _IntervalTypesCard(),
+              _DashboardHeader(),
+              SizedBox(height: 24),
+              _WeeklyComparisonCard(),
+              SizedBox(height: 24),
+              _TrainingLoadCard(),
+              SizedBox(height: 24),
+              _RecentActivityCard(),
+              SizedBox(height: 24),
+              _IntervalTypesCard(),
             ],
           ),
         ),
@@ -49,7 +42,7 @@ class _DashboardHeader extends StatelessWidget {
       children: [
         ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(
-            colors: [AppColors.vanillaCustard, AppColors.deepTwilight],
+            colors: [AppColors.surfaceCard, AppColors.primary],
           ).createShader(bounds),
           child: const Text(
             'Interval Insights',
@@ -86,7 +79,7 @@ class _WeeklyComparisonCard extends StatelessWidget {
                 'Weekly Comparison',
                 style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
               ),
-              Icon(Icons.list, color: AppColors.vanillaCustard, size: 20),
+              Icon(Icons.list, color: AppColors.surfaceCard, size: 20),
             ],
           ),
           const SizedBox(height: 8),
@@ -97,7 +90,7 @@ class _WeeklyComparisonCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.vanillaCustard,
+                  color: AppColors.surfaceCard,
                 ),
               ),
               SizedBox(width: 12),
@@ -109,10 +102,7 @@ class _WeeklyComparisonCard extends StatelessWidget {
               Chip(
                 label: Text(
                   '+10.3%',
-                  style: TextStyle(
-                    color: AppColors.vanillaCustard,
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: AppColors.surfaceCard, fontSize: 12),
                 ),
                 backgroundColor: Color(0xFF064E3B), // Dark Green
                 padding: EdgeInsets.zero,
@@ -184,7 +174,7 @@ class _WeeklyComparisonCard extends StatelessWidget {
       barRods: [
         BarChartRodData(
           toY: y1,
-          color: AppColors.vanillaCustard,
+          color: AppColors.surfaceCard,
           width: 8,
           borderRadius: BorderRadius.circular(2),
         ),
@@ -230,7 +220,7 @@ class _TrainingLoadCard extends StatelessWidget {
                         strokeWidth: 12,
                         backgroundColor: Color(0xFF1E293B),
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          AppColors.petalFrost,
+                          AppColors.surfaceLight,
                         ),
                         strokeCap: StrokeCap.round,
                       ),
@@ -245,7 +235,7 @@ class _TrainingLoadCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 36,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.petalFrost,
+                            color: AppColors.surfaceLight,
                           ),
                         ),
                         Text(
@@ -279,7 +269,7 @@ class _RecentActivityCard extends StatelessWidget {
         children: [
           const Row(
             children: [
-              Icon(Icons.list, color: AppColors.tangerineDream, size: 20),
+              Icon(Icons.list, color: AppColors.secondary, size: 20),
               SizedBox(width: 8),
               Text(
                 'Recent Activity Insights',
@@ -336,7 +326,7 @@ class _RecentActivityCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             insight,
-            style: const TextStyle(color: AppColors.petalFrost, fontSize: 14),
+            style: const TextStyle(color: AppColors.surfaceLight, fontSize: 14),
           ),
           const SizedBox(height: 8),
           Row(
@@ -345,7 +335,7 @@ class _RecentActivityCard extends StatelessWidget {
                 width: 8,
                 height: 8,
                 decoration: const BoxDecoration(
-                  color: AppColors.petalFrost,
+                  color: AppColors.surfaceLight,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -373,7 +363,7 @@ class _IntervalTypesCard extends StatelessWidget {
         children: [
           const Row(
             children: [
-              Icon(Icons.list, color: AppColors.skyBlueLight, size: 20),
+              Icon(Icons.list, color: AppColors.accent, size: 20),
               SizedBox(width: 8),
               Text(
                 'Common Interval Types',
@@ -382,7 +372,7 @@ class _IntervalTypesCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          _buildTypeRow('Tempo', '12 runs', AppColors.petalFrost, [
+          _buildTypeRow('Tempo', '12 runs', AppColors.surfaceLight, [
             3,
             5,
             4,
@@ -392,7 +382,7 @@ class _IntervalTypesCard extends StatelessWidget {
             9,
           ]),
           const SizedBox(height: 16),
-          _buildTypeRow('VO2 Max', '8 runs', AppColors.tangerineDream, [
+          _buildTypeRow('VO2 Max', '8 runs', AppColors.secondary, [
             2,
             3,
             5,
@@ -402,7 +392,7 @@ class _IntervalTypesCard extends StatelessWidget {
             7,
           ]),
           const SizedBox(height: 16),
-          _buildTypeRow('Easy', '18 runs', AppColors.vanillaCustard, [
+          _buildTypeRow('Easy', '18 runs', AppColors.surfaceCard, [
             8,
             9,
             10,

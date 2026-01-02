@@ -59,6 +59,7 @@ GoRouter router(Ref ref) {
           StatefulShellBranch(routes: <RouteBase>[$dashboardRoute]),
           StatefulShellBranch(routes: <RouteBase>[$activitiesRoute]),
           StatefulShellBranch(routes: <RouteBase>[$agentRoute]),
+          StatefulShellBranch(routes: <RouteBase>[$profileRoute]),
         ],
       ),
       $signInRoute,

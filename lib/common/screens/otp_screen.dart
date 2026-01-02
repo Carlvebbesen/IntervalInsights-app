@@ -57,7 +57,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
         fontWeight: FontWeight.bold,
       ),
       decoration: BoxDecoration(
-        color: AppColors.deepTwilight.withValues(alpha: 0.5),
+        color: AppColors.primary.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: AppColors.textSecondary.withValues(alpha: 0.5),
@@ -66,30 +66,25 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     );
 
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: AppColors.tangerineDream), // Focus Color
+      border: Border.all(color: AppColors.secondary), // Focus Color
       borderRadius: BorderRadius.circular(16),
-      color: AppColors.deepTwilight,
+      color: AppColors.primary,
     );
 
     final submittedPinTheme = defaultPinTheme.copyDecorationWith(
-      color: AppColors.deepTwilight,
-      border: Border.all(
-        color: AppColors.vanillaCustard,
-      ), // Success/Filled feel
+      color: AppColors.primary,
+      border: Border.all(color: AppColors.surfaceCard), // Success/Filled feel
     );
 
     return Scaffold(
       // Top half background color
-      backgroundColor: AppColors.skyBlueLight,
+      backgroundColor: AppColors.accent,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            color: AppColors.deepTwilight,
-          ),
+          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.primary),
           onPressed: _onChangeEmail,
         ),
       ),
@@ -111,7 +106,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                     child: const Icon(
                       Icons.lock_person_outlined,
                       size: 60,
-                      color: AppColors.deepTwilight,
+                      color: AppColors.primary,
                     ),
                   ),
                 ],
@@ -126,7 +121,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
               width: double.infinity,
               padding: const EdgeInsets.fromLTRB(24, 40, 24, 24),
               decoration: const BoxDecoration(
-                color: AppColors.deepTwilight,
+                color: AppColors.primary,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(32),
                   topRight: Radius.circular(32),
@@ -160,14 +155,14 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                           Text(
                             email,
                             style: const TextStyle(
-                              color: AppColors.skyBlueLight,
+                              color: AppColors.accent,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           const SizedBox(width: 8),
                           const Icon(
                             Icons.edit,
-                            color: AppColors.skyBlueLight,
+                            color: AppColors.accent,
                             size: 16,
                           ),
                         ],
@@ -224,7 +219,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                                 text: "Resend",
                                 style: TextStyle(
                                   color: AppColors
-                                      .tangerineDream, // Accent color for action
+                                      .secondary, // Accent color for action
                                   fontWeight: FontWeight.bold,
                                   decoration: TextDecoration.underline,
                                 ),

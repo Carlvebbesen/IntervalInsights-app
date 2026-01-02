@@ -1,14 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:interval_insights_app/common/api/auth_interceptor.dart';
 
 class Api {
-  // Singleton pattern
   Api._private() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: const String.fromEnvironment(
-          'BACKEND_URL',
-        ), // Set this in your --dart-define
+        baseUrl: const String.fromEnvironment('BACKEND_URL'),
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         headers: {
@@ -17,18 +15,12 @@ class Api {
         },
       ),
     );
-
-    // --- UPDATED SECTION ---
     _dio.interceptors.addAll([
       // Add your custom Auth Interceptor
       AuthInterceptor(),
-
-      // Keep your logger for debugging
-      LogInterceptor(requestBody: true, responseBody: true),
+      LogInterceptor(requestBody: kDebugMode, responseBody: kDebugMode),
     ]);
-    // -----------------------
   }
-
   static final Api _instance = Api._private();
   factory Api() => _instance;
 
@@ -62,6 +54,16 @@ class Api {
   Future<dynamic> patch(String endpoint, {Map<String, dynamic>? body}) async {
     try {
       final response = await _dio.patch(endpoint, data: body);
+      return response.data;
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  /// Generic DELETE request
+  Future<dynamic> delete(String endpoint, {Map<String, dynamic>? body}) async {
+    try {
+      final response = await _dio.delete(endpoint, data: body);
       return response.data;
     } on DioException catch (e) {
       throw _handleError(e);

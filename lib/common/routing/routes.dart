@@ -4,9 +4,11 @@ import 'package:interval_insights_app/common/screens/activities_screen.dart';
 import 'package:interval_insights_app/common/screens/agent_screen.dart';
 import 'package:interval_insights_app/common/screens/dashboard_screen.dart';
 import 'package:interval_insights_app/common/screens/otp_screen.dart';
+import 'package:interval_insights_app/common/screens/profile_screen.dart';
 import 'package:interval_insights_app/common/screens/sign_in_screen.dart';
 import 'package:interval_insights_app/common/screens/splash_screen.dart';
 import 'package:interval_insights_app/common/screens/strava_auth_screen.dart';
+import 'package:interval_insights_app/common/screens/sync_activites_sceen.dart';
 
 part 'routes.g.dart';
 
@@ -65,6 +67,36 @@ class AgentRoute extends GoRouteData with $AgentRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const AgentScreen();
+  }
+}
+
+@TypedGoRoute<ProfileRoute>(
+  path: '/profile',
+  routes: [TypedGoRoute<SyncActivitiesRoute>(path: 'syncActivities')],
+)
+class ProfileRoute extends GoRouteData with $ProfileRoute {
+  const ProfileRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return MaterialPage(
+      key: ValueKey(state.matchedLocation),
+      name: "profile",
+      child: build(context, state),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ProfileScreen();
+  }
+}
+
+class SyncActivitiesRoute extends GoRouteData with $SyncActivitiesRoute {
+  const SyncActivitiesRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const SyncActivitesSceen();
   }
 }
 

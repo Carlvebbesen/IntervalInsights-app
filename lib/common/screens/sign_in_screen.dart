@@ -20,7 +20,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.deepTwilight,
+      backgroundColor: AppColors.primary,
       body: Stack(
         children: [
           // 1. New Background: Subtle Gradient Mesh
@@ -31,10 +31,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.skyBlueLight.withValues(alpha: 0.15),
-                  AppColors.deepTwilight,
-                  AppColors.deepTwilight,
-                  AppColors.petalFrost.withValues(alpha: 0.1),
+                  AppColors.accent.withValues(alpha: 0.15),
+                  AppColors.primary,
+                  AppColors.primary,
+                  AppColors.surfaceLight.withValues(alpha: 0.1),
                 ],
                 stops: const [0.0, 0.4, 0.6, 1.0],
               ),

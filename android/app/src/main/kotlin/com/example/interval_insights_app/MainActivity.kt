@@ -1,4 +1,4 @@
-package com.example.interval_insights_app
+package org.ebbesen.intervalinsights
 
 import io.flutter.embedding.android.FlutterActivity
 

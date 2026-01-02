@@ -6,14 +6,12 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class StravaAuthWebView extends StatefulWidget {
   final String authUrl;
-  final String redirectUrl;
   final void Function(String code) onSuccess;
   final void Function(String error) onError;
 
   const StravaAuthWebView({
     super.key,
     required this.authUrl,
-    required this.redirectUrl,
     required this.onSuccess,
     required this.onError,
   });
@@ -46,7 +44,9 @@ class _StravaAuthWebViewState extends State<StravaAuthWebView> {
             }
           },
           onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith(widget.redirectUrl)) {
+            if (request.url.startsWith(
+              const String.fromEnvironment("REDIRECT_URL"),
+            )) {
               _handleRedirect(request.url);
               return NavigationDecision.prevent;
             }

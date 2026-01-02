@@ -14,11 +14,11 @@ class StravaAuthScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: AppColors.tangerineDream,
+      backgroundColor: AppColors.secondary,
       appBar: AppBar(
-        backgroundColor: AppColors.tangerineDream,
+        backgroundColor: AppColors.secondary,
         leading: IconButton(
-          color: AppColors.deepTwilight,
+          color: AppColors.primary,
           onPressed: () => ref.read(authControllerProvider.notifier).signOut(),
           icon: const Icon(Icons.arrow_back_ios_new),
         ),
@@ -27,7 +27,7 @@ class StravaAuthScreen extends ConsumerWidget {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: AppColors.deepTwilight,
+            color: AppColors.primary,
           ),
         ),
         centerTitle: true,
@@ -39,7 +39,7 @@ class StravaAuthScreen extends ConsumerWidget {
           const Text(
             'To analyze your performance, we need access to your activities. Connect your Strava account to start syncing your data.',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20, color: AppColors.deepTwilight),
+            style: TextStyle(fontSize: 20, color: AppColors.primary),
           ),
           const SizedBox(height: 32),
           AppButton(
@@ -97,7 +97,7 @@ class _StravaBottomSheetState extends ConsumerState<StravaBottomSheet> {
               child: Column(
                 children: [
                   Container(
-                    color: AppColors.tangerineDream,
+                    color: AppColors.secondary,
                     padding: const EdgeInsets.all(16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,13 +107,13 @@ class _StravaBottomSheetState extends ConsumerState<StravaBottomSheet> {
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.deepTwilight,
+                            color: AppColors.primary,
                           ),
                         ),
                         IconButton(
                           icon: const Icon(
                             Icons.close,
-                            color: AppColors.deepTwilight,
+                            color: AppColors.primary,
                           ),
                           onPressed: () => Navigator.pop(context),
                         ),
@@ -151,7 +151,6 @@ class _StravaBottomSheetState extends ConsumerState<StravaBottomSheet> {
       child: showAuthView
           ? StravaAuthWebView(
               authUrl: snapshot.data!,
-              redirectUrl: "http://localhost:3000",
               onSuccess: (code) async {
                 setState(() {
                   isCompleted = true;

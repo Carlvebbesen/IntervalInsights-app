@@ -94,12 +94,9 @@ class _AgentScreenState extends State<AgentScreen>
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: isListening
-                                  ? [
-                                      AppColors.petalFrost,
-                                      const Color(0xFF0891B2),
-                                    ]
+                                  ? [AppColors.accent, const Color(0xFF0891B2)]
                                   : [
-                                      AppColors.vanillaCustard,
+                                      AppColors.surfaceCard,
                                       const Color(0xFF7C3AED),
                                     ],
                             ),
@@ -107,8 +104,8 @@ class _AgentScreenState extends State<AgentScreen>
                               BoxShadow(
                                 color:
                                     (isListening
-                                            ? AppColors.petalFrost
-                                            : AppColors.vanillaCustard)
+                                            ? AppColors.accent
+                                            : AppColors.surfaceCard)
                                         .withOpacity(0.5),
                                 blurRadius: 20,
                                 spreadRadius: 5,
@@ -150,15 +147,13 @@ class _AgentScreenState extends State<AgentScreen>
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: isListening
-                              ? [AppColors.petalFrost, AppColors.vanillaCustard]
+                              ? [AppColors.accent, AppColors.surfaceCard]
                               : [Colors.purple, Colors.deepPurple],
                         ),
                         boxShadow: [
                           BoxShadow(
                             color:
-                                (isListening
-                                        ? AppColors.petalFrost
-                                        : Colors.purple)
+                                (isListening ? AppColors.accent : Colors.purple)
                                     .withOpacity(0.4),
                             blurRadius: 15,
                             offset: const Offset(0, 5),
@@ -213,9 +208,7 @@ class _AgentScreenState extends State<AgentScreen>
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isListening
-                      ? AppColors.petalFrost
-                      : AppColors.petalFrost,
+                  color: isListening ? AppColors.accent : AppColors.accent,
                   width: 2,
                 ),
               ),

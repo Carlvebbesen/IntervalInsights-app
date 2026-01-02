@@ -10,12 +10,14 @@ class AppButton extends StatelessWidget {
   final bool isLoading;
   final AppButtonType type;
   final IconData? icon;
+  final bool disabled;
 
   const AppButton({
     super.key,
     required this.label,
     required this.onPressed,
     this.isLoading = false,
+    this.disabled = false,
     this.type = AppButtonType.primary,
     this.icon,
   });
@@ -25,9 +27,13 @@ class AppButton extends StatelessWidget {
     // 1. Text Button Style
     if (type == AppButtonType.text) {
       return TextButton(
-        onPressed: isLoading ? null : onPressed,
+        onPressed: disabled
+            ? null
+            : isLoading
+            ? null
+            : onPressed,
         style: TextButton.styleFrom(
-          foregroundColor: AppColors.skyBlueLight,
+          foregroundColor: AppColors.accent,
           textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
         ),
         child: isLoading
@@ -48,7 +54,7 @@ class AppButton extends StatelessWidget {
           ? BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.skyBlueLight.withValues(alpha: 0.25),
+                  color: AppColors.accent.withValues(alpha: 0.25),
                   blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),
@@ -56,17 +62,19 @@ class AppButton extends StatelessWidget {
             )
           : null,
       child: ElevatedButton(
-        onPressed: (onPressed == null || isLoading) ? null : onPressed,
+        onPressed: disabled
+            ? null
+            : (onPressed == null || isLoading)
+            ? null
+            : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: isPrimary
-              ? AppColors.skyBlueLight
-              : Colors.transparent,
-          foregroundColor: isPrimary ? Colors.white : AppColors.skyBlueLight,
+          backgroundColor: isPrimary ? AppColors.accent : Colors.transparent,
+          foregroundColor: isPrimary ? Colors.white : AppColors.accent,
           padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
           elevation: 0, // We handle shadow in Container for better glow control
           side: isPrimary
               ? BorderSide.none
-              : const BorderSide(color: AppColors.skyBlueLight, width: 1.5),
+              : const BorderSide(color: AppColors.accent, width: 1.5),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -76,7 +84,7 @@ class AppButton extends StatelessWidget {
                 height: 20,
                 width: 20,
                 child: CircularProgressIndicator(
-                  color: isPrimary ? Colors.white : AppColors.skyBlueLight,
+                  color: isPrimary ? Colors.white : AppColors.accent,
                   strokeWidth: 2.5,
                 ),
               )

@@ -65,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.deepTwilight,
+      backgroundColor: AppColors.primary,
       body: Container(
         // Subtle Gradient Background matching SignIn
         decoration: BoxDecoration(
@@ -73,10 +73,10 @@ class _SplashScreenState extends State<SplashScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppColors.petalFrost.withValues(alpha: 0.1),
-              AppColors.deepTwilight,
-              AppColors.deepTwilight,
-              AppColors.petalFrost.withValues(alpha: 0.05),
+              AppColors.surfaceLight.withValues(alpha: 0.1),
+              AppColors.primary,
+              AppColors.primary,
+              AppColors.surfaceLight.withValues(alpha: 0.05),
             ],
           ),
         ),
@@ -97,7 +97,7 @@ class _SplashScreenState extends State<SplashScreen>
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.skyBlueLight.withValues(alpha: 0.2),
+                          color: AppColors.accent.withValues(alpha: 0.2),
                           blurRadius: 40,
                           spreadRadius: 0,
                           offset: const Offset(0, 10),
@@ -112,7 +112,7 @@ class _SplashScreenState extends State<SplashScreen>
                     child: const Icon(
                       Icons.insights,
                       size: 48,
-                      color: AppColors.vanillaCustard,
+                      color: AppColors.surfaceCard,
                     ),
                   ),
                 ),
@@ -166,7 +166,7 @@ class _SplashScreenState extends State<SplashScreen>
                   height: 24,
                   child: CircularProgressIndicator(
                     strokeWidth: 2.5,
-                    color: AppColors.petalFrost,
+                    color: AppColors.surfaceLight,
                     backgroundColor: Colors.transparent,
                   ),
                 ),
