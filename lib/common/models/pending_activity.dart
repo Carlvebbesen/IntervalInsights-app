@@ -1,39 +1,71 @@
+import 'package:interval_insights_app/common/models/enums/interval_unit_enum.dart';
 import 'package:interval_insights_app/common/models/enums/training_type_enum.dart';
 
-class DetectedStructure {
+class DetectedStep {
   final int reps;
-  final String workType;
-  final num workValue;
-  final num? recoveryValue;
+  final WorkType workType;
+  final double workValue;
+  final double? recoveryValue;
+  final WorkType? recoveryType;
 
-  const DetectedStructure({
+  DetectedStep({
     required this.reps,
     required this.workType,
     required this.workValue,
-    required this.recoveryValue,
+    this.recoveryValue,
+    this.recoveryType,
   });
 
-  factory DetectedStructure.fromJson(Map<String, dynamic> json) {
-    return DetectedStructure(
+  factory DetectedStep.fromJson(Map<String, dynamic> json) {
+    return DetectedStep(
       reps: json['reps'] as int,
-      workType: json['work_type'] as String,
-      workValue: json['work_value'] as num,
-      recoveryValue: json['recovery_value'] as num?,
+      workType: WorkType.fromString(json['work_type'] as String),
+      recoveryType: WorkType.fromStringOrnull(json['recovery_type'] as String?),
+      workValue: (json['work_value'] as num).toDouble(),
+      recoveryValue: (json['recovery_value'] as num?)?.toDouble(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'reps': reps,
-      'work_type': workType,
+      'work_type': workType.name.toUpperCase(),
+      if (recoveryType != null)
+        'recovery_type': recoveryType?.name.toUpperCase(),
       'work_value': workValue,
-      'recovery_value': recoveryValue,
+      if (recoveryValue != null) 'recovery_value': recoveryValue,
+    };
+  }
+}
+
+class DetectedSet {
+  final int setReps;
+  final List<DetectedStep> steps;
+  final double? setRecovery;
+
+  DetectedSet({required this.setReps, required this.steps, this.setRecovery});
+
+  factory DetectedSet.fromJson(Map<String, dynamic> json) {
+    return DetectedSet(
+      setReps: json['set_reps'] as int,
+      steps: (json['steps'] as List)
+          .map((e) => DetectedStep.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      setRecovery: (json['set_recovery'] as num?)?.toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'set_reps': setReps,
+      'steps': steps.map((e) => e.toJson()).toList(),
+      if (setRecovery != null) 'set_recovery': setRecovery,
     };
   }
 
-  static List<DetectedStructure> fromList(List<dynamic> list) {
+  static List<DetectedSet> fromList(List<dynamic> list) {
     return list
-        .map((item) => DetectedStructure.fromJson(item as Map<String, dynamic>))
+        .map((item) => DetectedSet.fromJson(item as Map<String, dynamic>))
         .toList();
   }
 }
@@ -42,13 +74,13 @@ class WorkoutAnalysisOutput {
   final TrainingType trainingType;
   final double confidenceScore;
   final String? intervalsDescription;
-  final List<DetectedStructure> detectedStructure;
+  final List<DetectedSet> structure;
 
   WorkoutAnalysisOutput({
     required this.trainingType,
     required this.confidenceScore,
     this.intervalsDescription,
-    required this.detectedStructure,
+    required this.structure,
   });
 
   factory WorkoutAnalysisOutput.fromJson(Map<String, dynamic> json) {
@@ -58,8 +90,8 @@ class WorkoutAnalysisOutput {
           TrainingType.other,
       confidenceScore: (json['confidence_score'] as num).toDouble(),
       intervalsDescription: json['intervals_description'] as String?,
-      detectedStructure: json['structure'] != null
-          ? DetectedStructure.fromList(json['structure'] as List<dynamic>)
+      structure: json['structure'] != null
+          ? DetectedSet.fromList(json['structure'] as List<dynamic>)
           : [],
     );
   }

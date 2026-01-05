@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:interval_insights_app/common/api/agents_api.dart';
 import 'package:interval_insights_app/common/models/pending_activity.dart';
-import 'package:interval_insights_app/common/models/proposed_interval_segment.dart';
+import 'package:interval_insights_app/common/models/expanded_interval_step.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'proposed_pace_controller.g.dart';
@@ -10,95 +10,106 @@ part 'proposed_pace_controller.g.dart';
 @riverpod
 class ProposedPaceController extends _$ProposedPaceController {
   @override
-  Future<Map<int, IntervalGroup>> build(
-    List<DetectedStructure> structure,
+  Future<Map<int, ExpandedIntervalSet>> build(
+    List<DetectedSet> structure,
   ) async {
     if (structure.isEmpty) {
-      return <int, IntervalGroup>{};
+      return <int, ExpandedIntervalSet>{};
     }
 
     final link = ref.keepAlive();
     final disposalTimer = Timer(const Duration(minutes: 5), () => link.close());
     ref.onDispose(() => disposalTimer.cancel());
 
-    final rawIntervals = await AgentsApi().getProposedPace(structure);
-    final groupsMap = _groupIntervals(rawIntervals, structure);
-
-    return groupsMap;
+    final rawSets = await AgentsApi().getProposedPace(structure);
+    return _processAndGroupSets(rawSets);
   }
 
-  void updateGroup(IntervalGroup updatedGroup) {
+  Map<int, ExpandedIntervalSet> _processAndGroupSets(
+    List<ExpandedIntervalSet> rawSets,
+  ) {
+    final Map<int, ExpandedIntervalSet> groupedMap = {};
+    final totalIntervals = rawSets.fold<int>(
+      0,
+      (sum, set) => sum + set.steps.length,
+    );
+    int globalGroupId = 0;
+
+    int dynamicChunkSize = 5;
+    if (totalIntervals <= 12 && totalIntervals > 0) {
+      dynamicChunkSize = (totalIntervals / 3).ceil();
+      if (dynamicChunkSize < 3) dynamicChunkSize = 2;
+    }
+    for (var originalSet in rawSets) {
+      if (originalSet.steps.length <= dynamicChunkSize) {
+        groupedMap[globalGroupId] = originalSet;
+        globalGroupId++;
+      } else {
+        final stepChunks = _chunkList(originalSet.steps, dynamicChunkSize);
+        final indexChunks = _chunkList(
+          originalSet.originalIndices,
+          dynamicChunkSize,
+        );
+
+        for (int i = 0; i < stepChunks.length; i++) {
+          groupedMap[globalGroupId] = ExpandedIntervalSet(
+            originalSetId: originalSet.originalSetId,
+            setColor: originalSet.setColor,
+            steps: stepChunks[i],
+            originalIndices: indexChunks[i],
+            setRecovery: originalSet.setRecovery,
+          );
+          globalGroupId++;
+        }
+      }
+    }
+    return groupedMap;
+  }
+
+  List<List<T>> _chunkList<T>(List<T> list, int chunkSize) {
+    List<List<T>> chunks = [];
+    for (var i = 0; i < list.length; i += chunkSize) {
+      chunks.add(
+        list.sublist(
+          i,
+          i + chunkSize > list.length ? list.length : i + chunkSize,
+        ),
+      );
+    }
+    return chunks;
+  }
+
+  void updateSet(int setId, ExpandedIntervalSet updatedSet) {
     final currentState = state.value;
     if (currentState == null) return;
 
-    final groups = currentState;
-    final updatedGroups = Map<int, IntervalGroup>.from(groups);
-    updatedGroups[updatedGroup.groupId] = updatedGroup;
-
-    state = AsyncData((updatedGroups));
+    final updatedMap = Map<int, ExpandedIntervalSet>.from(currentState);
+    updatedMap[setId] = updatedSet;
+    state = AsyncData(updatedMap);
   }
 
-  Map<int, IntervalGroup> _groupIntervals(
-    List<ProposedIntervalSegment> intervals,
-    List<DetectedStructure> structure,
-  ) {
-    if (intervals.isEmpty) return {};
+  List<ExpandedIntervalSet> getFinalizedStructure() {
+    final currentMap = state.value;
+    if (currentMap == null) return [];
 
-    final Map<int, IntervalGroup> groups = {};
-    List<ProposedIntervalSegment> currentGroupItems = [];
-    List<int> currentIndices = [];
-    int groupId = 1;
-
-    for (int i = 0; i < intervals.length; i++) {
-      final segment = intervals[i];
-
-      bool shouldStartNewGroup =
-          currentGroupItems.isEmpty ||
-          currentGroupItems.length >= 5 ||
-          currentGroupItems.last.unit != segment.unit ||
-          (currentGroupItems.last.targetValue - segment.targetValue).abs() >
-              0.01;
-
-      if (shouldStartNewGroup && currentGroupItems.isNotEmpty) {
-        groups[groupId] = IntervalGroup(
-          restValue: structure
-              .firstWhereOrNull((item) => item.workValue == segment.targetValue)
-              ?.recoveryValue,
-          groupId: groupId,
-          items: List.from(currentGroupItems),
-          originalIndices: List.from(currentIndices),
+    final List<ExpandedIntervalSet> mergedSets = [];
+    final Map<String, List<ExpandedIntervalSet>> groupedById =
+        groupBy<ExpandedIntervalSet, String>(
+          currentMap.values,
+          (set) => set.originalSetId,
         );
-        groupId++;
-        currentGroupItems.clear();
-        currentIndices.clear();
-      }
-
-      currentGroupItems.add(segment);
-      currentIndices.add(i);
-    }
-    if (currentGroupItems.isNotEmpty) {
-      groups[groupId] = IntervalGroup(
-        restValue: structure
-            .firstWhereOrNull(
-              (item) => item.workValue == currentGroupItems.first.targetValue,
-            )
-            ?.recoveryValue,
-        groupId: groupId,
-        items: List.from(currentGroupItems),
-        originalIndices: List.from(currentIndices),
+    for (var entry in groupedById.entries) {
+      final chunks = entry.value;
+      mergedSets.add(
+        ExpandedIntervalSet(
+          originalSetId: entry.key,
+          originalIndices: [],
+          setColor: chunks.first.setColor,
+          steps: chunks.expand((c) => c.steps).toList(),
+          setRecovery: chunks.last.setRecovery,
+        ),
       );
     }
-
-    return groups;
+    return mergedSets;
   }
-}
-
-@riverpod
-IntervalGroup? intervalGroup(
-  Ref ref,
-  List<DetectedStructure> structure,
-  int groupId,
-) {
-  final paceState = ref.watch(proposedPaceControllerProvider(structure));
-  return paceState.value?[groupId];
 }

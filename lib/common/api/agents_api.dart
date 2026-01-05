@@ -1,6 +1,7 @@
 import 'package:interval_insights_app/common/api/api.dart';
 import 'package:interval_insights_app/common/models/pending_activity.dart';
-import 'package:interval_insights_app/common/models/proposed_interval_segment.dart';
+import 'package:interval_insights_app/common/models/expanded_interval_step.dart';
+import 'package:interval_insights_app/common/utils/toast_helper.dart';
 
 class AgentsApi {
   final Api _api = Api();
@@ -16,8 +17,8 @@ class AgentsApi {
     }
   }
 
-  Future<List<ProposedIntervalSegment>> getProposedPace(
-    List<DetectedStructure> structure,
+  Future<List<ExpandedIntervalSet>> getProposedPace(
+    List<DetectedSet> structure,
   ) async {
     try {
       final response = await _api.post(
@@ -25,10 +26,11 @@ class AgentsApi {
         body: {"structure": structure.map((st) => st.toJson()).toList()},
       );
       if (response is List<dynamic>) {
-        return ProposedIntervalSegment.fromJsonList(response);
+        return ExpandedIntervalSet.fromJsonList(response);
       }
       throw Exception("Invalid data format");
     } catch (e) {
+      ToastHelper.showError(title: "Invalid data format");
       return [];
     }
   }
@@ -37,7 +39,7 @@ class AgentsApi {
     int activityId,
     int stravaId,
     String notes,
-    List<IntervalGroup> groups,
+    List<ExpandedIntervalSet> sets,
   ) async {
     try {
       await _api.post(
@@ -46,7 +48,7 @@ class AgentsApi {
           "activityId": activityId,
           "stravaId": stravaId,
           "notes": notes,
-          "groups": groups.map((item) => item.toJson()).toList(),
+          "sets": sets.map((item) => item.toJson()).toList(),
         },
       );
     } catch (e) {

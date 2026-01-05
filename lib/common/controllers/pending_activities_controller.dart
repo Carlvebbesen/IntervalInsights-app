@@ -5,7 +5,6 @@ import 'package:interval_insights_app/common/api/agents_api.dart';
 import 'package:interval_insights_app/common/controllers/proposed_pace_controller.dart';
 import 'package:interval_insights_app/common/models/enums/training_type_enum.dart';
 import 'package:interval_insights_app/common/models/pending_activity.dart';
-import 'package:interval_insights_app/common/models/proposed_interval_segment.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'pending_activities_controller.g.dart';
@@ -66,14 +65,16 @@ class PendingActivitiesController extends _$PendingActivitiesController {
     int activityId,
     int stravaId,
     String notes,
-    List<DetectedStructure> structure,
+    List<DetectedSet> structure,
   ) async {
-    final groups = ref.read(proposedPaceControllerProvider(structure)).value;
+    final groups = ref
+        .read(proposedPaceControllerProvider(structure).notifier)
+        .getFinalizedStructure();
     await AgentsApi().startCompleteAnalysis(
       activityId,
       stravaId,
       notes,
-      groups?.values.toList() ?? [],
+      groups,
     );
     final currentList = state.value;
     if (currentList == null) return;

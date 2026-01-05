@@ -4,10 +4,10 @@ import 'package:interval_insights_app/common/controllers/proposed_pace_controlle
 import 'package:interval_insights_app/common/models/pending_activity.dart';
 import 'package:interval_insights_app/common/utils/app_theme.dart';
 import 'package:interval_insights_app/common/widgets/app_button.dart';
-import 'package:interval_insights_app/common/widgets/pace_selector_view/interval_group_view.dart';
+import 'package:interval_insights_app/common/widgets/pace_selector_view/interval_set_view.dart';
 
 class PaceSelectorView extends ConsumerStatefulWidget {
-  final List<DetectedStructure> structure;
+  final List<DetectedSet> structure;
 
   const PaceSelectorView({super.key, required this.structure});
 
@@ -57,10 +57,10 @@ class _PaceSelectorViewState extends ConsumerState<PaceSelectorView> {
               ),
               _hide
                   ? const SizedBox.shrink()
-                  : IntervalGroupView(
+                  : IntervalSetView(
                       speedMode: _isSpeedMode,
                       structure: widget.structure,
-                      groupIds: data.keys.toList(),
+                      sets: data,
                     ),
             ],
           ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:interval_insights_app/common/models/proposed_interval_segment.dart';
+import 'package:interval_insights_app/common/models/expanded_interval_step.dart';
 import 'package:interval_insights_app/common/utils/app_theme.dart';
 import 'package:interval_insights_app/common/widgets/activities_filter.dart';
 import 'package:interval_insights_app/common/widgets/build_stats_badge.dart';
@@ -7,9 +7,7 @@ import 'package:toastification/toastification.dart';
 
 class IntervalCard extends StatelessWidget {
   final String rangeText;
-  final ProposedIntervalSegment interval;
-  final num? restValue;
-  final double currentMps;
+  final ExpandedIntervalStep interval;
   final bool isSpeedMode;
   final ValueChanged<double> onPaceChanged;
   final bool isRange;
@@ -20,9 +18,7 @@ class IntervalCard extends StatelessWidget {
   const IntervalCard({
     super.key,
     required this.rangeText,
-    required this.restValue,
     required this.interval,
-    required this.currentMps,
     required this.isSpeedMode,
     required this.onPaceChanged,
     this.isRange = false,
@@ -33,6 +29,7 @@ class IntervalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentMps = interval.targetPace.toDouble();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
@@ -57,7 +54,7 @@ class IntervalCard extends StatelessWidget {
                 icon: Icons.directions_run,
                 spacing: 2,
                 text:
-                    "${interval.targetValue.toInt()} ${interval.unit.name.capitalize()}",
+                    "${interval.workValue.toInt()} ${interval.unit.name.capitalize()}",
                 color: Colors.green[900] ?? Colors.green,
                 bgColor: Colors.green,
                 iconColor: Colors.green,
@@ -66,7 +63,7 @@ class IntervalCard extends StatelessWidget {
                 icon: Icons.hourglass_bottom_rounded,
                 spacing: 2,
                 text:
-                    "${restValue?.toInt() ?? "-"} ${interval.unit.name.capitalize()}",
+                    "${interval.recoveryValue?.toInt() ?? " - "} ${interval.recoveryUnit?.name.capitalize()}",
                 color: AppColors.secondary,
                 bgColor: AppColors.secondary.toMaterialColor,
                 iconColor: AppColors.secondary,
@@ -107,7 +104,7 @@ class IntervalCard extends StatelessWidget {
   }
 
   void _adjustByStep(double kmhDelta) {
-    double currentKmh = currentMps * 3.6;
+    double currentKmh = interval.targetPace.toDouble() * 3.6;
     onPaceChanged((currentKmh + kmhDelta) / 3.6);
   }
 }

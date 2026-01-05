@@ -47,11 +47,13 @@ class _PendingReviewAnalyzeState extends ConsumerState<PendingReviewAnalyze> {
           widget.activity.id,
           widget.activity.stravaId,
           _notesController.text,
-          widget.activity.draftAnalysisResult?.detectedStructure ?? [],
+          widget.activity.draftAnalysisResult?.structure ?? [],
         );
-    setState(() {
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -94,14 +96,15 @@ class _PendingReviewAnalyzeState extends ConsumerState<PendingReviewAnalyze> {
               title: "Suggested Structure: (AI: $confidence % conf)",
               description: intervalsDesc,
             ),
-          if (widget.activity.trainingType?.isIntervalType == true)
+          if (widget.activity.trainingType?.isIntervalType == true &&
+              !widget.activity.isCompleted)
             PaceSelectorView(
-              structure:
-                  widget.activity.draftAnalysisResult?.detectedStructure ?? [],
+              structure: widget.activity.draftAnalysisResult?.structure ?? [],
             ),
           TextFormField(
             controller: _notesController,
             maxLines: 5,
+            enabled: !widget.activity.isCompleted,
             onFieldSubmitted: (_) => FocusScope.of(context).unfocus(),
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
