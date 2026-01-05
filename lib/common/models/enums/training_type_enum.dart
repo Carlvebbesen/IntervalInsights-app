@@ -50,7 +50,19 @@ enum TrainingType {
     };
   }
 
-  /// Helper to parse the string from the database back into the Enum
+  bool get isIntervalType {
+    return switch (this) {
+      TrainingType.shortIntervals ||
+      TrainingType.longIntervals ||
+      TrainingType.sprints ||
+      TrainingType.hillSprints ||
+      TrainingType.fartlek ||
+      TrainingType.progressiveLongRun => true,
+
+      _ => false,
+    };
+  }
+
   static TrainingType? fromApiValue(String value) {
     return TrainingType.values.firstWhereOrNull((e) => e.apiValue == value);
   }

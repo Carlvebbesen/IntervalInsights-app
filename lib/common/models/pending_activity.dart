@@ -22,6 +22,15 @@ class DetectedStructure {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'reps': reps,
+      'work_type': workType,
+      'work_value': workValue,
+      'recovery_value': recoveryValue,
+    };
+  }
+
   static List<DetectedStructure> fromList(List<dynamic> list) {
     return list
         .map((item) => DetectedStructure.fromJson(item as Map<String, dynamic>))

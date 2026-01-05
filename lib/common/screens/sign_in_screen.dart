@@ -23,8 +23,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       backgroundColor: AppColors.primary,
       body: Stack(
         children: [
-          // 1. New Background: Subtle Gradient Mesh
-          // Replaces the expensive "Blur" blobs with a clean gradient
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -40,8 +38,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               ),
             ),
           ),
-
-          // 2. Content
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
@@ -54,7 +50,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   Container(
                     padding: const EdgeInsets.all(32),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF161C26), // Lighter than bg
+                      color: const Color(0xFF161C26),
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(
                         color: Colors.white.withValues(alpha: 0.05),

@@ -45,8 +45,6 @@ class _AuthFormState extends ConsumerState<AuthForm> {
     if (!_formKey.currentState!.validate()) return;
 
     final email = _emailController.text.trim();
-
-    // Add logic to check Ref loading state here if needed
     if (widget.isSignUp) {
       ref
           .read(authControllerProvider.notifier)
@@ -70,7 +68,6 @@ class _AuthFormState extends ConsumerState<AuthForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Name Inputs Animation
           AnimatedCrossFade(
             firstChild: const SizedBox(width: double.infinity),
             secondChild: Column(
@@ -129,8 +126,6 @@ class _AuthFormState extends ConsumerState<AuthForm> {
           ),
 
           const SizedBox(height: 32),
-
-          // Action Button
           AppButton(
             label: widget.isSignUp ? 'Create Account' : 'Send Code',
             onPressed: _submit,
@@ -139,8 +134,6 @@ class _AuthFormState extends ConsumerState<AuthForm> {
           ),
 
           const SizedBox(height: 24),
-
-          // Toggle Mode
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

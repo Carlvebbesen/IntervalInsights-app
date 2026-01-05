@@ -22,6 +22,12 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: AppColors.accent,
+        selectionColor: AppColors.accent.withValues(alpha: 0.3),
+        selectionHandleColor: AppColors.accent,
+      ),
+
       colorScheme: const ColorScheme(
         brightness: Brightness.light,
         primary: AppColors.primary,

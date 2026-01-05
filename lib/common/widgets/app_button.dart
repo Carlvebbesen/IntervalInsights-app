@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:interval_insights_app/common/utils/app_theme.dart';
 
-// --- GENERIC BUTTON ---
 enum AppButtonType { primary, text, outline }
 
 class AppButton extends StatelessWidget {
@@ -10,6 +9,8 @@ class AppButton extends StatelessWidget {
   final bool isLoading;
   final AppButtonType type;
   final IconData? icon;
+  final Color textColor;
+  final Color bgColor;
   final bool disabled;
 
   const AppButton({
@@ -20,11 +21,12 @@ class AppButton extends StatelessWidget {
     this.disabled = false,
     this.type = AppButtonType.primary,
     this.icon,
+    this.textColor = Colors.white,
+    this.bgColor = AppColors.accent,
   });
 
   @override
   Widget build(BuildContext context) {
-    // 1. Text Button Style
     if (type == AppButtonType.text) {
       return TextButton(
         onPressed: disabled
@@ -33,7 +35,7 @@ class AppButton extends StatelessWidget {
             ? null
             : onPressed,
         style: TextButton.styleFrom(
-          foregroundColor: AppColors.accent,
+          foregroundColor: bgColor,
           textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
         ),
         child: isLoading
@@ -42,19 +44,16 @@ class AppButton extends StatelessWidget {
                 height: 16,
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
-            : Text(label),
+            : Text(label, style: TextStyle(color: textColor)),
       );
     }
-
-    // 2. Primary / Outline Button Config
     final isPrimary = type == AppButtonType.primary;
-
     return Container(
       decoration: isPrimary
           ? BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.accent.withValues(alpha: 0.25),
+                  color: bgColor.withValues(alpha: 0.25),
                   blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),
@@ -68,13 +67,13 @@ class AppButton extends StatelessWidget {
             ? null
             : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: isPrimary ? AppColors.accent : Colors.transparent,
-          foregroundColor: isPrimary ? Colors.white : AppColors.accent,
+          backgroundColor: isPrimary ? bgColor : Colors.transparent,
+          foregroundColor: isPrimary ? Colors.white : bgColor,
           padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
-          elevation: 0, // We handle shadow in Container for better glow control
+          elevation: 0,
           side: isPrimary
               ? BorderSide.none
-              : const BorderSide(color: AppColors.accent, width: 1.5),
+              : BorderSide(color: bgColor, width: 1.5),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -84,7 +83,7 @@ class AppButton extends StatelessWidget {
                 height: 20,
                 width: 20,
                 child: CircularProgressIndicator(
-                  color: isPrimary ? Colors.white : AppColors.accent,
+                  color: isPrimary ? Colors.white : bgColor,
                   strokeWidth: 2.5,
                 ),
               )
@@ -98,7 +97,8 @@ class AppButton extends StatelessWidget {
                   ],
                   Text(
                     label,
-                    style: const TextStyle(
+                    style: TextStyle(
+                      color: textColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       letterSpacing: 0.5,

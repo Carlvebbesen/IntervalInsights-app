@@ -14,9 +14,9 @@ class StravaAuthScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.secondary,
+        backgroundColor: AppColors.orange,
         leading: IconButton(
           color: AppColors.primary,
           onPressed: () => ref.read(authControllerProvider.notifier).signOut(),
@@ -43,7 +43,9 @@ class StravaAuthScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 32),
           AppButton(
+            bgColor: AppColors.orange,
             label: "Connect",
+            icon: Icons.connect_without_contact_sharp,
             onPressed: () {
               showModalBottomSheet(
                 context: context,
@@ -97,7 +99,7 @@ class _StravaBottomSheetState extends ConsumerState<StravaBottomSheet> {
               child: Column(
                 children: [
                   Container(
-                    color: AppColors.secondary,
+                    color: AppColors.orange,
                     padding: const EdgeInsets.all(16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

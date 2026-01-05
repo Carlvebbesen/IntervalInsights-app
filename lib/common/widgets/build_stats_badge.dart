@@ -9,6 +9,7 @@ class BuildStatsBadge extends StatelessWidget {
     this.iconColor = AppColors.accentStrong,
     this.color = AppColors.primary,
     this.bgColor = Colors.blue,
+    this.spacing = 6,
     this.onTap,
   });
 
@@ -16,6 +17,7 @@ class BuildStatsBadge extends StatelessWidget {
   final String text;
   final Color color;
   final Color iconColor;
+  final double spacing;
   final MaterialColor bgColor;
   final VoidCallback? onTap;
 
@@ -24,7 +26,7 @@ class BuildStatsBadge extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: bgColor[50],
           borderRadius: BorderRadius.circular(8),
@@ -32,9 +34,9 @@ class BuildStatsBadge extends StatelessWidget {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          spacing: spacing,
           children: [
             Icon(icon, size: 18, color: iconColor),
-            const SizedBox(width: 6),
             Text(
               text,
               style: TextStyle(

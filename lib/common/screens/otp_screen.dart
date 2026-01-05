@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:interval_insights_app/common/controllers/auth_controller.dart';
 import 'package:interval_insights_app/common/utils/app_theme.dart'; // Ensure AppColors is here
+import 'package:interval_insights_app/common/utils/toast_helper.dart';
 import 'package:interval_insights_app/common/widgets/app_button.dart';
 import 'package:pinput/pinput.dart';
 
@@ -29,55 +30,52 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     ref.read(authControllerProvider.notifier).verifyOtpCode(code);
   }
 
-  void _onResend() {
-    ref.read(authControllerProvider.notifier).resendOtp();
+  Future<void> _onResend() async {
+    await ref.read(authControllerProvider.notifier).resendOtp();
+    ToastHelper.showFeedback(title: "Email sent ");
   }
 
   void _onChangeEmail() {
-    // Go back to login/signup to fix email
     ref.invalidate(authControllerProvider);
   }
 
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
-
-    // 2. Extract email safely.
-    // We know we are in VerifyOtpCode state because the router put us here.
     final email = authState.value is VerifyOtpCode
         ? (authState.value as VerifyOtpCode).email
         : '';
     final isLoading = authState.isLoading;
     final defaultPinTheme = PinTheme(
-      width: 56,
-      height: 56,
+      width: 64,
+      height: 64,
       textStyle: const TextStyle(
         fontSize: 22,
-        color: AppColors.textPrimary,
-        fontWeight: FontWeight.bold,
+        color: AppColors.accent,
+        fontWeight: FontWeight.w500,
       ),
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
+          width: 2,
           color: AppColors.textSecondary.withValues(alpha: 0.5),
         ),
       ),
     );
 
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: AppColors.secondary), // Focus Color
+      border: Border.all(color: AppColors.secondary, width: 3),
       borderRadius: BorderRadius.circular(16),
       color: AppColors.primary,
     );
 
     final submittedPinTheme = defaultPinTheme.copyDecorationWith(
       color: AppColors.primary,
-      border: Border.all(color: AppColors.surfaceCard), // Success/Filled feel
+      border: Border.all(color: AppColors.surfaceCard),
     );
 
     return Scaffold(
-      // Top half background color
       backgroundColor: AppColors.accent,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -206,7 +204,6 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
 
                     const SizedBox(height: 24),
 
-                    // Resend Code Link
                     Center(
                       child: TextButton(
                         onPressed: isLoading ? null : _onResend,
@@ -218,8 +215,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                               TextSpan(
                                 text: "Resend",
                                 style: TextStyle(
-                                  color: AppColors
-                                      .secondary, // Accent color for action
+                                  color: AppColors.accent,
                                   fontWeight: FontWeight.bold,
                                   decoration: TextDecoration.underline,
                                 ),
